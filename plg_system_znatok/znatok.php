@@ -58,8 +58,6 @@ class plgSystemZnatok extends CMSPlugin
 	 */
 	protected $canonical = null;
 
-	protected $a = array();
-
 	/**
 	 * Doubles protection.
 	 *
@@ -155,16 +153,34 @@ class plgSystemZnatok extends CMSPlugin
 	}
 
 	/**
-	 * Add titles to paginationDescription.
+	 * Add paginationDescription.
 	 *
 	 * @param   string    $context  The context of the content being passed to the plugin.
 	 * @param   object   &$row      The item object.
-	 * @param   mixed    &$params   The article params
-	 * @param   integer   $page     The 'page' number
+	 * @param   mixed    &$params   The view params.
+	 * @param   integer   $page     The 'page' number.
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
 	public function onContentPrepare($context, &$row, &$params, $page = 0)
+	{
+		if ($this->params->get('pagination_description', 0))
+		{
+			$this->addPaginationDescription($context, $row, $params, $page);
+		}
+	}
+
+	/**
+	 * Add titles to paginationDescription.
+	 *
+	 * @param   string    $context  The context of the content being passed to the plugin.
+	 * @param   object   &$row      The item object.
+	 * @param   mixed    &$params   The view params.
+	 * @param   integer   $page     The 'page' number.
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 */
+	protected function addPaginationDescription($context, &$row, &$params, $page = 0)
 	{
 		if ($this->app->isClient('site'))
 		{
@@ -214,14 +230,14 @@ class plgSystemZnatok extends CMSPlugin
 	}
 
 	/**
-	 * Set pagination title.
+	 * Set pagination title and description.
 	 *
 	 * @since  __DEPLOY_VERSION__
 	 */
 	public function onBeforeCompileHead()
 	{
-		$this->setPaginationDescription();
-		$this->setPaginationTitle();
+		if ($this->params->get('pagination_description', 0)) $this->setPaginationDescription();
+		if ($this->params->get('pagination_title', 0)) $this->setPaginationTitle();
 	}
 
 	/**
@@ -305,7 +321,7 @@ class plgSystemZnatok extends CMSPlugin
 				if ($page > 1)
 				{
 					$doc = Factory::getDocument();
-					$doc->setTitle(Text::sprintf('PLG_SYSTEM_ZNATOK_META_PAGINATION', $doc->getTitle(), $page));
+					$doc->setTitle(Text::sprintf('PLG_SYSTEM_ZNATOK_PAGINATION_TITLE', $doc->getTitle(), $page));
 				}
 			}
 		}

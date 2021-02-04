@@ -22,6 +22,20 @@
 	<config>
 		<fields name="params">
 			<fieldset name="basic">
+				<field name="pagination_title" type="radio"
+					   label="PLG_SYSTEM_ZNATOK_PARAMS_PAGINATION_TITLE"
+					   default="0"
+					   class="btn-group btn-group-yesno">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
+				<field name="pagination_description" type="radio"
+					   label="PLG_SYSTEM_ZNATOK_PARAMS_PAGINATION_DESCRIPTION"
+					   default="0"
+					   class="btn-group btn-group-yesno">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
 			</fieldset>
 		</fields>
 	</config>
