@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Application\SiteApplication;
+use Joomla\CMS\Document\HtmlDocument;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
@@ -154,6 +155,38 @@ class plgSystemZnatok extends CMSPlugin
 	}
 
 	/**
+	 * Add titles to paginationDescription.
+	 *
+	 * @param   string    $context  The context of the content being passed to the plugin.
+	 * @param   object   &$row      The item object.
+	 * @param   mixed    &$params   The article params
+	 * @param   integer   $page     The 'page' number
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 */
+	public function onContentPrepare($context, &$row, &$params, $page = 0)
+	{
+		if ($this->app->isClient('site'))
+		{
+			$option                = $this->app->input->get('option');
+			$view                  = $this->app->input->get('view');
+			$doc                   = Factory::getDocument();
+			$paginationDescription = $doc->getMetaData('paginationDescription');
+			$paginationDescription = (!empty($paginationDescription)) ? explode(' |;| ', $paginationDescription) : array();
+
+			if ($context === 'com_content.category' && $option === 'com_content' && $view === 'category' && !empty($row->introtext))
+			{
+				$paginationDescription[] = $row->title;
+			}
+
+			if ($paginationDescription)
+			{
+				$doc->setMetaData('paginationDescription', implode(' |;| ', $paginationDescription));
+			}
+		}
+	}
+
+	/**
 	 * Method to get content category limit.
 	 *
 	 * @return int content category page items limit.
@@ -187,7 +220,64 @@ class plgSystemZnatok extends CMSPlugin
 	 */
 	public function onBeforeCompileHead()
 	{
+		$this->setPaginationDescription();
 		$this->setPaginationTitle();
+	}
+
+	/**
+	 * Set pagination page meta description.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected function setPaginationDescription()
+	{
+		if ($this->app->isClient('site'))
+		{
+			/* @var HtmlDocument $doc */
+			$doc                   = Factory::getDocument();
+			$paginationDescription = $doc->getMetaData('paginationDescription');
+			$paginationDescription = (!empty($paginationDescription)) ? explode(' |;| ', $paginationDescription) : array();
+			if ($this->app->input->getInt('start') && $paginationDescription)
+			{
+				// Set description
+				$descriptionStart   = $doc->getTitle() . ': ';
+				$descriptionEnd     = ' ...';
+				$descriptionEndShow = false;
+				$descriptionTotal   = iconv_strlen($descriptionStart) + iconv_strlen($descriptionEnd);
+				$descriptionMax     = 250;
+
+				$descriptionMiddle = array();
+				foreach ($paginationDescription as $title)
+				{
+					$descriptionTotalNew = $descriptionTotal + iconv_strlen($title) + 2;
+					if ($descriptionTotalNew <= $descriptionMax)
+					{
+						$descriptionTotal    = $descriptionTotalNew;
+						$descriptionMiddle[] = $title;
+					}
+					else
+					{
+						$descriptionEndShow = true;
+						break;
+					}
+				}
+
+				$description = $descriptionStart . implode(', ', $descriptionMiddle);
+				if ($descriptionEndShow)
+				{
+					$description .= $descriptionEnd;
+				}
+
+				$doc->setDescription($description);
+			}
+
+			if (isset($doc->_metaTags['name']) && isset($doc->_metaTags['name']['paginationDescription']))
+			{
+				$headData = $doc->getHeadData();
+				unset($headData['metaTags']['name']['paginationDescription']);
+				$doc->setHeadData($headData);
+			}
+		}
 	}
 
 	/**
@@ -203,18 +293,19 @@ class plgSystemZnatok extends CMSPlugin
 			$view   = $this->app->input->get('view');
 			if ($offset = $this->app->input->getInt('start'))
 			{
+				$page = 0;
 				if ($option == 'com_content' && $view === 'category')
 				{
 					$limit = $this->getContentCategoryLimit();
 					$page  = $offset / $limit;
 					if (is_float($page)) $page = floor($page);
 					$page++;
+				}
 
-					if ($page > 1)
-					{
-						$doc = Factory::getDocument();
-						$doc->setTitle(Text::sprintf('PLG_SYSTEM_ZNATOK_META_PAGINATION', $doc->getTitle(), $page));
-					}
+				if ($page > 1)
+				{
+					$doc = Factory::getDocument();
+					$doc->setTitle(Text::sprintf('PLG_SYSTEM_ZNATOK_META_PAGINATION', $doc->getTitle(), $page));
 				}
 			}
 		}
