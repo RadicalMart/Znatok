@@ -13,6 +13,8 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Application\SiteApplication;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
@@ -55,6 +57,8 @@ class plgSystemZnatok extends CMSPlugin
 	 */
 	protected $canonical = null;
 
+	protected $a = array();
+
 	/**
 	 * Doubles protection.
 	 *
@@ -75,15 +79,12 @@ class plgSystemZnatok extends CMSPlugin
 	 */
 	protected function fixDoubles()
 	{
-		$app = $this->app;
-
-		if ($app->isClient('site'))
+		if ($this->app->isClient('site'))
 		{
-			$option = $app->input->get('option');
-			$view   = $app->input->get('view');
-			$layout = $app->input->get('layout');
-			$id     = $app->input->getInt('id');
-			$catid  = $app->input->getInt('catid');
+			$option = $this->app->input->get('option');
+			$view   = $this->app->input->get('view');
+			$id     = $this->app->input->getInt('id');
+			$catid  = $this->app->input->getInt('catid');
 			$link   = null;
 
 			if ($option == 'com_content')
@@ -93,24 +94,9 @@ class plgSystemZnatok extends CMSPlugin
 				// Content Category
 				if ($view === 'category')
 				{
-					$link = ContentHelperRoute::getCategoryRoute($id);
-
-					/* @var $app SiteApplication */
-					$app    = $this->app;
-					$params = $app->getParams();
-					if ($layout === 'blog' || $params->get('layout_type') === 'blog')
-					{
-						$limit = $params->get('num_leading_articles') + $params->get('num_intro_articles');
-					}
-					else
-					{
-						$itemid = $app->input->get('id', 0, 'int') . ':'
-							. $app->input->get('Itemid', 0, 'int');
-						$limit  = $app->getUserStateFromRequest('com_content.category.list.' . $itemid . '.limit',
-							'limit', $params->get('display_num'), 'uint');
-					}
-
-					if ($offset = $app->input->getInt('start'))
+					$link  = ContentHelperRoute::getCategoryRoute($id);
+					$limit = $this->getContentCategoryLimit();
+					if ($offset = $this->app->input->getInt('start'))
 					{
 						$page = $offset / $limit;
 						if (is_float($page)) $link .= '&start=' . floor($page) * $limit;
@@ -163,6 +149,73 @@ class plgSystemZnatok extends CMSPlugin
 				$current  = $uri->toString(array('path', 'query', 'fragment'));
 				$redirect = $canonical->toString(array('path', 'query', 'fragment'));
 				if (urldecode($current) != urldecode($redirect)) $this->app->redirect($redirect, 301);
+			}
+		}
+	}
+
+	/**
+	 * Method to get content category limit.
+	 *
+	 * @return int content category page items limit.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected function getContentCategoryLimit()
+	{
+		/* @var $app SiteApplication */
+		$app    = $this->app;
+		$params = $app->getParams();
+		if ($app->input->get('layout') === 'blog' || $params->get('layout_type') === 'blog')
+		{
+			$limit = $params->get('num_leading_articles') + $params->get('num_intro_articles');
+		}
+		else
+		{
+			$itemid = $app->input->get('id', 0, 'int') . ':'
+				. $app->input->get('Itemid', 0, 'int');
+			$limit  = (int) $app->getUserStateFromRequest('com_content.category.list.' . $itemid . '.limit',
+				'limit', $params->get('display_num'), 'uint');
+		}
+
+		return $limit;
+	}
+
+	/**
+	 * Set pagination title.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	public function onBeforeCompileHead()
+	{
+		$this->setPaginationTitle();
+	}
+
+	/**
+	 * Add pagination page number to title.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected function setPaginationTitle()
+	{
+		if ($this->app->isClient('site'))
+		{
+			$option = $this->app->input->get('option');
+			$view   = $this->app->input->get('view');
+			if ($offset = $this->app->input->getInt('start'))
+			{
+				if ($option == 'com_content' && $view === 'category')
+				{
+					$limit = $this->getContentCategoryLimit();
+					$page  = $offset / $limit;
+					if (is_float($page)) $page = floor($page);
+					$page++;
+
+					if ($page > 1)
+					{
+						$doc = Factory::getDocument();
+						$doc->setTitle(Text::sprintf('PLG_SYSTEM_ZNATOK_META_PAGINATION', $doc->getTitle(), $page));
+					}
+				}
 			}
 		}
 	}
