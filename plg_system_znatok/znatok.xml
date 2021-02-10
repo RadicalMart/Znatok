@@ -22,6 +22,26 @@
 	<config>
 		<fields name="params">
 			<fieldset name="basic">
+				<field name="doubles_canonical" type="radio"
+					   label="PLG_SYSTEM_ZNATOK_PARAMS_DOUBLES_CANONICAL"
+					   default="0"
+					   class="btn-group btn-group-yesno">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
+				<field name="doubles_canonical_allowed" type="textarea"
+					   label="PLG_SYSTEM_ZNATOK_PARAMS_DOUBLES_CANONICAL_ALLOWED"
+					   showon="doubles_canonical:1"/>
+				<field name="doubles_redirect" type="radio"
+					   label="PLG_SYSTEM_ZNATOK_PARAMS_DOUBLES_REDIRECT"
+					   default="0"
+					   class="btn-group btn-group-yesno">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
+				<field name="doubles_redirect_allowed" type="textarea"
+					   label="PLG_SYSTEM_ZNATOK_PARAMS_DOUBLES_REDIRECT_ALLOWED"
+					   showon="doubles_redirect:1"/>
 				<field name="pagination_title" type="radio"
 					   label="PLG_SYSTEM_ZNATOK_PARAMS_PAGINATION_TITLE"
 					   default="0"

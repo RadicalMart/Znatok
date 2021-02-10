@@ -59,6 +59,61 @@ class plgSystemZnatok extends CMSPlugin
 	protected $canonical = null;
 
 	/**
+	 * No doubles canonical function enable.
+	 *
+	 * @var  boolean
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $doubles_canonical = false;
+
+	/**
+	 * No doubles redirect function enable.
+	 *
+	 * @var  boolean
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $doubles_redirect = false;
+
+	/**
+	 * Pagination title function enable.
+	 *
+	 * @var  boolean
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $pagination_title = false;
+
+	/**
+	 * Pagination description function enable.
+	 *
+	 * @var  boolean
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $pagination_description = false;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param   object  &$subject  The object to observe
+	 * @param   array    $config   An optional associative array of configuration settings.
+	 *
+	 * @since  1.2.0
+	 */
+	public function __construct(&$subject, $config = array())
+	{
+		parent::__construct($subject, $config);
+
+		// Set functions status
+		$this->doubles_canonical      = ($this->params->get('doubles_canonical', 0)) ? true : false;
+		$this->doubles_redirect       = ($this->params->get('doubles_redirect', 0)) ? true : false;
+		$this->pagination_title       = ($this->params->get('pagination_title', 0)) ? true : false;
+		$this->pagination_description = ($this->params->get('pagination_description', 0)) ? true : false;
+	}
+
+	/**
 	 * Doubles protection.
 	 *
 	 * @throws  Exception
@@ -68,7 +123,7 @@ class plgSystemZnatok extends CMSPlugin
 	public function onAfterRoute()
 	{
 		// No doubles protection
-		$this->fixDoubles();
+		if ($this->doubles_canonical || $this->doubles_redirect) $this->fixDoubles();
 	}
 
 	/**
@@ -121,33 +176,60 @@ class plgSystemZnatok extends CMSPlugin
 				$link      = Route::_($link, false);
 				$canonical = Uri::getInstance($link);
 
-				// Add start variable
+				// Delete start variable from canonical if empty
 				if ($canonical->hasVar('start') && empty($canonical->getVar('start')))
 				{
 					$canonical->delVar('start');
 				}
+
+				// Set start variable tyo canonical if don't empty in current link
 				if (!$canonical->getVar('start', false) && $uri->getVar('start', false))
 				{
 					$canonical->setVar('start', $uri->getVar('start'));
 				}
 
-				// Set canonical
-				$this->canonical = $root . $canonical->toString(array('path', 'query', 'fragment'));
-
-				// Add others variable
-				foreach ($uri->getQuery(true) as $key => $value)
+				// Add allowed variables from params
+				$allowed = array_filter(array_map('trim', preg_split('/\r\n|\r|\n/',
+					$this->params->get('doubles_canonical_allowed', ''))), function ($element) {
+					return !empty($element);
+				});
+				foreach ($allowed as $name)
 				{
-					$value = trim($value);
-					if (empty($value)) continue;
-
-					// Add utm variables
-					if (preg_match('#^utm_#', $key)) $canonical->setVar($key, $value);
+					if ($var = $uri->getVar($name, false)) $canonical->setVar($name, $var);
 				}
 
-				// Redirect if need
-				$current  = $uri->toString(array('path', 'query', 'fragment'));
-				$redirect = $canonical->toString(array('path', 'query', 'fragment'));
-				if (urldecode($current) != urldecode($redirect)) $this->app->redirect($redirect, 301);
+				// Set global canonical variable
+				if ($this->doubles_canonical)
+				{
+					$this->canonical = $root . $canonical->toString(array('path', 'query', 'fragment'));
+				}
+
+				// Prepare redirect link
+				if ($this->doubles_redirect)
+				{
+					$allowed = array_filter(array_map('trim', preg_split('/\r\n|\r|\n/',
+						$this->params->get('doubles_redirect_allowed', ''))), function ($element) {
+						return !empty($element);
+					});
+
+					// Add others variable
+					foreach ($uri->getQuery(true) as $name => $value)
+					{
+						$value = trim($value);
+						if (empty($value)) continue;
+
+						// Add utm variables
+						if (preg_match('#^utm_#', $name)) $canonical->setVar($name, $value);
+
+						// Add allowed variables from params
+						if (in_array($name, $allowed)) $canonical->setVar($name, $value);
+					}
+
+					// Redirect if need
+					$current  = $uri->toString(array('path', 'query', 'fragment'));
+					$redirect = $canonical->toString(array('path', 'query', 'fragment'));
+					if (urldecode($current) != urldecode($redirect)) $this->app->redirect($redirect, 301);
+				}
 			}
 		}
 	}
@@ -164,10 +246,8 @@ class plgSystemZnatok extends CMSPlugin
 	 */
 	public function onContentPrepare($context, &$row, &$params, $page = 0)
 	{
-		if ($this->params->get('pagination_description', 0))
-		{
-			$this->addPaginationDescription($context, $row, $params, $page);
-		}
+		// Prepare pagination description
+		if ($this->pagination_description) $this->addPaginationDescription($context, $row, $params, $page);
 	}
 
 	/**
@@ -236,8 +316,8 @@ class plgSystemZnatok extends CMSPlugin
 	 */
 	public function onBeforeCompileHead()
 	{
-		if ($this->params->get('pagination_description', 0)) $this->setPaginationDescription();
-		if ($this->params->get('pagination_title', 0)) $this->setPaginationTitle();
+		if ($this->pagination_description) $this->setPaginationDescription();
+		if ($this->pagination_title) $this->setPaginationTitle();
 	}
 
 	/**
@@ -334,7 +414,8 @@ class plgSystemZnatok extends CMSPlugin
 	 */
 	public function onAfterRender()
 	{
-		$this->setCanonical();
+		// Add canonical tag to head
+		if ($this->doubles_canonical) $this->setCanonical();
 	}
 
 	/**
