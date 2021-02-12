@@ -17,8 +17,10 @@ use Joomla\CMS\Document\HtmlDocument;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Utilities\ArrayHelper;
 
 class plgSystemZnatok extends CMSPlugin
 {
@@ -95,6 +97,15 @@ class plgSystemZnatok extends CMSPlugin
 	protected $pagination_description = false;
 
 	/**
+	 * Current plugin id.
+	 *
+	 * @var  int
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $plugin_id = 0;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param   object  &$subject  The object to observe
@@ -111,6 +122,8 @@ class plgSystemZnatok extends CMSPlugin
 		$this->doubles_redirect       = ($this->params->get('doubles_redirect', 0)) ? true : false;
 		$this->pagination_title       = ($this->params->get('pagination_title', 0)) ? true : false;
 		$this->pagination_description = ($this->params->get('pagination_description', 0)) ? true : false;
+
+		$this->plugin_id = (int) PluginHelper::getPlugin('system', 'znatok')->id;
 	}
 
 	/**
@@ -189,10 +202,9 @@ class plgSystemZnatok extends CMSPlugin
 				}
 
 				// Add allowed variables from params
-				$allowed = array_filter(array_map('trim', preg_split('/\r\n|\r|\n/',
-					$this->params->get('doubles_canonical_allowed', ''))), function ($element) {
-					return !empty($element);
-				});
+				$allowed = ArrayHelper::getColumn(
+					ArrayHelper::fromObject($this->params->get('doubles_canonical_allowed', new stdClass())),
+					'key');
 				foreach ($allowed as $name)
 				{
 					if ($var = $uri->getVar($name, false)) $canonical->setVar($name, $var);
@@ -207,10 +219,9 @@ class plgSystemZnatok extends CMSPlugin
 				// Prepare redirect link
 				if ($this->doubles_redirect)
 				{
-					$allowed = array_filter(array_map('trim', preg_split('/\r\n|\r|\n/',
-						$this->params->get('doubles_redirect_allowed', ''))), function ($element) {
-						return !empty($element);
-					});
+					$allowed = ArrayHelper::getColumn(
+						ArrayHelper::fromObject($this->params->get('doubles_redirect_allowed', new stdClass())),
+						'key');
 
 					// Add others variable
 					foreach ($uri->getQuery(true) as $name => $value)
@@ -318,6 +329,19 @@ class plgSystemZnatok extends CMSPlugin
 	{
 		if ($this->pagination_description) $this->setPaginationDescription();
 		if ($this->pagination_title) $this->setPaginationTitle();
+
+		if ($this->app->isClient('administrator')
+			&& $this->app->input->get('option') === 'com_plugins'
+			&& $this->app->input->get('view') === 'plugin'
+			&& $this->app->input->get('layout') === 'edit'
+			&& $this->app->input->getInt('extension_id') === $this->plugin_id
+		)
+		{
+			Factory::getDocument()->addStyleDeclaration(
+				'.control-group[data-showon*="doubles_canonical"] table,
+				.control-group[data-showon*="doubles_redirect"] table {max-width:300px};'
+			);
+		}
 	}
 
 	/**
