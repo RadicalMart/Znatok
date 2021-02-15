@@ -446,7 +446,7 @@ class plgSystemZnatok extends CMSPlugin
 			{
 				if (isset($link['relation']) && $link['relation'] === 'canonical') unset($doc->_links[$url]);
 			}
-			$doc->addHeadLink(htmlspecialchars($this->canonical . 'X2'), 'canonical');
+			$doc->addHeadLink(htmlspecialchars($this->canonical), 'canonical');
 		}
 	}
 }
