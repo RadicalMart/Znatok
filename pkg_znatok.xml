@@ -16,6 +16,10 @@
 		<language tag="ru-RU">ru-RU/ru-RU.pkg_znatok.sys.ini</language>
 	</languages>
 	<files>
+		<folder type="component" id="com_znatok">com_znatok</folder>
 		<folder type="plugin" group="system" id="name">plg_system_znatok</folder>
 	</files>
+	<server type="extension" priority="1" name="Znatok">
+		https://hika.su/update/free/pkg_znatok.xml
+	</server>
 </extension>

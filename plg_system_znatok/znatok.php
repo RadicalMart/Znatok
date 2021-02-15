@@ -111,7 +111,7 @@ class plgSystemZnatok extends CMSPlugin
 	 * @param   object  &$subject  The object to observe
 	 * @param   array    $config   An optional associative array of configuration settings.
 	 *
-	 * @since  1.2.0
+	 * @since  __DEPLOY_VERSION__
 	 */
 	public function __construct(&$subject, $config = array())
 	{
