@@ -329,6 +329,7 @@ class plgSystemZnatok extends CMSPlugin
 	{
 		if ($this->pagination_description) $this->setPaginationDescription();
 		if ($this->pagination_title) $this->setPaginationTitle();
+		if ($this->doubles_canonical) $this->setCanonical();
 
 		if ($this->app->isClient('administrator')
 			&& $this->app->input->get('option') === 'com_plugins'
@@ -432,17 +433,6 @@ class plgSystemZnatok extends CMSPlugin
 	}
 
 	/**
-	 * Set canonical link.
-	 *
-	 * @since  __DEPLOY_VERSION__
-	 */
-	public function onAfterRender()
-	{
-		// Add canonical tag to head
-		if ($this->doubles_canonical) $this->setCanonical();
-	}
-
-	/**
 	 * Method to set correct canonical link to page.
 	 *
 	 * @since  __DEPLOY_VERSION__
@@ -451,28 +441,7 @@ class plgSystemZnatok extends CMSPlugin
 	{
 		if ($this->app->isClient('site') && $this->canonical)
 		{
-			$body = $this->app->getBody();
-			if (preg_match('|<head>(.*)</head>|si', $body, $matches))
-			{
-				$search  = $matches[1];
-				$replace = $search;
-
-				// Remove old canonical
-				$replace = preg_replace('#<link.*rel="canonical".*>#i', '', $replace);
-				$replace = preg_replace('#<link.*rel="canonical">#i', '', $replace);
-
-				// Add canonical
-				$replace .= PHP_EOL . '	<link href="' . $this->canonical . '" rel="canonical" />' . PHP_EOL;
-
-				// Remove empty lines
-				$replace = preg_replace('#(</.*?>|/>)(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+#',
-					'${1}' . PHP_EOL, $replace);
-
-				// Replace body
-				$body = str_replace($search, $replace, $body);
-			}
-
-			$this->app->setBody($body);
+			Factory::getDocument()->addCustomTag('<link href="' . $this->canonical . '" rel="canonical" />');
 		}
 	}
 }
