@@ -441,7 +441,12 @@ class plgSystemZnatok extends CMSPlugin
 	{
 		if ($this->app->isClient('site') && $this->canonical)
 		{
-			Factory::getDocument()->addCustomTag('<link href="' . $this->canonical . '" rel="canonical" />');
+			$doc = Factory::getDocument();
+			foreach ($doc->_links as $url => $link)
+			{
+				if (isset($link['relation']) && $link['relation'] === 'canonical') unset($doc->_links[$url]);
+			}
+			$doc->addHeadLink(htmlspecialchars($this->canonical . 'X2'), 'canonical');
 		}
 	}
 }
