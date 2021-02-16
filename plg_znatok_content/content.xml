@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.9" type="plugin" group="znatok" method="upgrade">
+	<name>PLG_ZNATOK_CONTENT</name>
+	<author>Delo Design</author>
+	<creationDate>February 2021</creationDate>
+	<copyright>Copyright © 2021 Delo Design. All rights reserved.</copyright>
+	<license>https://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
+	<authorEmail>boss@delo-design.ru</authorEmail>
+	<authorUrl>https://delo-design.ru</authorUrl>
+	<version>0.0.1-dev</version>
+	<description>PLG_ZNATOK_CONTENT_DESCRIPTION</description>
+	<scriptfile>script.php</scriptfile>
+	<languages folder="language">
+		<language tag="en-GB">en-GB/en-GB.plg_znatok_content.ini</language>
+		<language tag="en-GB">en-GB/en-GB.plg_znatok_content.sys.ini</language>
+		<language tag="ru-RU">ru-RU/ru-RU.plg_znatok_content.ini</language>
+		<language tag="ru-RU">ru-RU/ru-RU.plg_znatok_content.sys.ini</language>
+	</languages>
+	<files>
+		<filename plugin="content">content.php</filename>
+	</files>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+			</fieldset>
+		</fields>
+	</config>
+</extension>

@@ -1,7 +1,7 @@
 <?php
 /*
  * @package     Znatok Package
- * @subpackage  plg_system_znatok
+ * @subpackage  plg_znatok_content
  * @version     __DEPLOY_VERSION__
  * @author      Delo Design - delo-design.ru
  * @copyright   Copyright (c) 2021 Delo Design. All rights reserved.
@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Installer\InstallerAdapter;
 
-class PlgSystemZnatokInstallerScript
+class PlgZnatokContentInstallerScript
 {
 	/**
 	 * Runs right after any installation action.

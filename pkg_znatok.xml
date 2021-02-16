@@ -17,7 +17,8 @@
 	</languages>
 	<files>
 		<folder type="component" id="com_znatok">com_znatok</folder>
-		<folder type="plugin" group="system" id="name">plg_system_znatok</folder>
+		<folder type="plugin" group="system" id="znatok">plg_system_znatok</folder>
+		<folder type="plugin" group="znatok" id="content">plg_znatok_content</folder>
 	</files>
 	<server type="extension" priority="1" name="Znatok">
 		https://hika.su/update/free/pkg_znatok.xml
