@@ -11,16 +11,8 @@
 
 defined('_JEXEC') or die;
 
-use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
-class znatokController extends BaseController
+class ZnatokModelDashboard extends BaseDatabaseModel
 {
-	/**
-	 * The default view.
-	 *
-	 * @var  string
-	 *
-	 * @since  __DEPLOY_VERSION__
-	 */
-	protected $default_view = 'dashboard';
 }

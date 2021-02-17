@@ -28,6 +28,10 @@ class ZnatokHelper extends ContentHelper
 	 */
 	public static function addSubmenu($vName)
 	{
+		JHtmlSidebar::addEntry(Text::_('COM_ZNATOK_DASHBOARD'),
+			'index.php?option=com_znatok&view=dashboard',
+			$vName == 'dashboard');
+
 		JHtmlSidebar::addEntry(Text::_('COM_ZNATOK_URLS'),
 			'index.php?option=com_znatok&view=urls',
 			$vName == 'urls');
