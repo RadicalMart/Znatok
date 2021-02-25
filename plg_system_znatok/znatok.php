@@ -155,6 +155,8 @@ class plgSystemZnatok extends CMSPlugin
 	{
 		if ($this->app->isClient('site') && ($this->doubles_canonical || $this->doubles_redirect))
 		{
+			$canonical = null;
+			$redirect = null;
 			$link              = null;
 			$canonical_allowed = ArrayHelper::getColumn(
 				ArrayHelper::fromObject($this->componentParams->get('doubles_canonical_allowed', new stdClass())),

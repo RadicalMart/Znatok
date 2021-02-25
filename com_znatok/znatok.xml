@@ -10,16 +10,16 @@
 	<version>0.0.1-dev</version>
 	<description>COM_ZNATOK_DESCRIPTION</description>
 	<scriptfile>script.php</scriptfile>
-	<install>
-		<sql>
-			<file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
-		</sql>
-	</install>
-	<uninstall>
-		<sql>
-			<file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
-		</sql>
-	</uninstall>
+<!--	<install>-->
+<!--		<sql>-->
+<!--			<file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>-->
+<!--		</sql>-->
+<!--	</install>-->
+<!--	<uninstall>-->
+<!--		<sql>-->
+<!--			<file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>-->
+<!--		</sql>-->
+<!--	</uninstall>-->
 	<files folder="site">
 		<filename>controller.php</filename>
 		<filename>znatok.php</filename>
@@ -34,7 +34,7 @@
 		<menu>COM_ZNATOK</menu>
 		<submenu>
 			<menu option="com_znatok" view="dashboard">COM_ZNATOK_DASHBOARD</menu>
-			<menu option="com_znatok" view="urls">COM_ZNATOK_URLS</menu>
+<!--			<menu option="com_znatok" view="urls">COM_ZNATOK_URLS</menu>-->
 		</submenu>
 		<files folder="admin">
 			<folder>controllers</folder>

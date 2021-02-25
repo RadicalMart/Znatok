@@ -32,9 +32,9 @@ class ZnatokHelper extends ContentHelper
 			'index.php?option=com_znatok&view=dashboard',
 			$vName == 'dashboard');
 
-		JHtmlSidebar::addEntry(Text::_('COM_ZNATOK_URLS'),
-			'index.php?option=com_znatok&view=urls',
-			$vName == 'urls');
+//		JHtmlSidebar::addEntry(Text::_('COM_ZNATOK_URLS'),
+//			'index.php?option=com_znatok&view=urls',
+//			$vName == 'urls');
 	}
 
 	/**

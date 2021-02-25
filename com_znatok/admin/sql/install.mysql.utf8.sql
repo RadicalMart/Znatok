@@ -11,14 +11,14 @@
 CREATE TABLE IF NOT EXISTS `#__znatok_urls`
 (
     `id`       int(11)      NOT NULL AUTO_INCREMENT,
-    'selector' varchar(100) NOT NULL DEFAULT '',
+    `context`  varchar(100) NOT NULL DEFAULT '',
     `url`      text         NOT NULL,
     `data`     mediumtext   NOT NULL,
     `solved`   tinyint(1)   NOT NULL DEFAULT 0,
     `created`  datetime     NOT NULL,
     `modified` datetime     NOT NULL,
     PRIMARY KEY `id` (`id`),
-    KEY `idx_selector` (`selector`),
+    KEY `idx_context` (`context`),
     KEY `idx_solved` (`solved`),
     KEY `idx_created` (`created`),
     KEY `idx_modified` (`modified`)
