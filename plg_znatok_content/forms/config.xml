@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset name="znatok" label="COM_ZNATOK">
+		<field type="note" label="COM_CONTENT_CATEGORIES"/>
+		<field name="znatok_categories_doubles_canonical" type="radio"
+			   label="COM_ZNATOK_PARAMS_DOUBLES_CANONICAL"
+			   default="1"
+			   class="btn-group btn-group-yesno">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
+		<field name="znatok_categories_doubles_canonical_allowed" type="subform"
+			   label="COM_ZNATOK_PARAMS_DOUBLES_CANONICAL_ALLOWED"
+			   multiple="true"
+			   buttons="add,remove"
+			   layout="joomla.form.field.subform.repeatable-table"
+			   showon="znatok_categories_doubles_canonical:1">
+			<form>
+				<field name="key" label="COM_ZNATOK_PARAMS_KEY" required="true"/>
+			</form>
+		</field>
+		<field name="znatok_categories_doubles_redirect" type="radio"
+			   label="COM_ZNATOK_PARAMS_DOUBLES_REDIRECT"
+			   default="1"
+			   class="btn-group btn-group-yesno">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
+		<field name="znatok_categories_doubles_redirect_allowed" type="subform"
+			   label="COM_ZNATOK_PARAMS_DOUBLES_REDIRECT_ALLOWED"
+			   multiple="true"
+			   buttons="add,remove"
+			   layout="joomla.form.field.subform.repeatable-table"
+			   showon="znatok_categories_doubles_redirect:1">
+			<form>
+				<field name="key" label="COM_ZNATOK_PARAMS_KEY" required="true"/>
+			</form>
+		</field>
+		<field type="spacer" hr="true"/>
+
+		<field type="note" label="JCATEGORY"/>
+		<field name="znatok_category_doubles_canonical" type="radio"
+			   label="COM_ZNATOK_PARAMS_DOUBLES_CANONICAL"
+			   default="1"
+			   class="btn-group btn-group-yesno">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
+		<field name="znatok_category_doubles_canonical_start" type="radio"
+			   label="PLG_ZNATOK_CONTENT_PARAMS_ALLOWED_START"
+			   default="1"
+			   class="btn-group btn-group-yesno"
+			   showon="znatok_category_doubles_canonical:1">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
+		<field name="znatok_category_doubles_canonical_allowed" type="subform"
+			   label="COM_ZNATOK_PARAMS_DOUBLES_CANONICAL_ALLOWED"
+			   multiple="true"
+			   buttons="add,remove"
+			   layout="joomla.form.field.subform.repeatable-table"
+			   showon="znatok_category_doubles_canonical:1">
+			<form>
+				<field name="key" label="COM_ZNATOK_PARAMS_KEY" required="true"/>
+			</form>
+		</field>
+		<field name="znatok_category_doubles_redirect" type="radio"
+			   label="COM_ZNATOK_PARAMS_DOUBLES_REDIRECT"
+			   default="1"
+			   class="btn-group btn-group-yesno">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
+		<field name="znatok_category_doubles_redirect_allowed" type="subform"
+			   label="COM_ZNATOK_PARAMS_DOUBLES_REDIRECT_ALLOWED"
+			   multiple="true"
+			   buttons="add,remove"
+			   layout="joomla.form.field.subform.repeatable-table"
+			   showon="znatok_category_doubles_redirect:1">
+			<form>
+				<field name="key" label="COM_ZNATOK_PARAMS_KEY" required="true"/>
+			</form>
+		</field>
+		<field name="znatok_category_pagination_title" type="radio"
+			   label="COM_ZNATOK_PARAMS_PAGINATION_TITLE"
+			   default="1"
+			   class="btn-group btn-group-yesno">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
+		<field name="znatok_category_pagination_description" type="radio"
+			   label="COM_ZNATOK_PARAMS_PAGINATION_DESCRIPTION"
+			   default="1"
+			   class="btn-group btn-group-yesno">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
+		<field type="spacer" hr="true"/>
+
+		<field type="note" label="COM_CONTENT_FIELDS_TYPE_MODAL_ARTICLE"/>
+		<field name="znatok_article_doubles_canonical" type="radio"
+			   label="COM_ZNATOK_PARAMS_DOUBLES_CANONICAL"
+			   default="1"
+			   class="btn-group btn-group-yesno">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
+		<field name="znatok_article_doubles_canonical_allowed" type="subform"
+			   label="COM_ZNATOK_PARAMS_DOUBLES_CANONICAL_ALLOWED"
+			   multiple="true"
+			   buttons="add,remove"
+			   layout="joomla.form.field.subform.repeatable-table"
+			   showon="znatok_article_doubles_canonical:1">
+			<form>
+				<field name="key" label="COM_ZNATOK_PARAMS_KEY" required="true"/>
+			</form>
+		</field>
+		<field name="znatok_article_doubles_redirect" type="radio"
+			   label="COM_ZNATOK_PARAMS_DOUBLES_REDIRECT"
+			   default="1"
+			   class="btn-group btn-group-yesno">
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>
+		<field name="znatok_article_doubles_redirect_allowed" type="subform"
+			   label="COM_ZNATOK_PARAMS_DOUBLES_REDIRECT_ALLOWED"
+			   multiple="true"
+			   buttons="add,remove"
+			   layout="joomla.form.field.subform.repeatable-table"
+			   showon="znatok_article_doubles_redirect:1">
+			<form>
+				<field name="key" label="COM_ZNATOK_PARAMS_KEY" required="true"/>
+			</form>
+		</field>
+	</fieldset>
+</form>

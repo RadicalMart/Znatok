@@ -17,6 +17,7 @@
 		<language tag="ru-RU">ru-RU/ru-RU.plg_znatok_content.sys.ini</language>
 	</languages>
 	<files>
+		<folder>forms</folder>
 		<filename plugin="content">content.php</filename>
 	</files>
 	<config>

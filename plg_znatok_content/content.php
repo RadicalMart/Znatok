@@ -13,10 +13,14 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Application\SiteApplication;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Document\HtmlDocument;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\Registry\Registry;
+use Joomla\Utilities\ArrayHelper;
 
 class plgZnatokContent extends CMSPlugin
 {
@@ -48,46 +52,130 @@ class plgZnatokContent extends CMSPlugin
 	protected $autoloadLanguage = true;
 
 	/**
-	 * Method to get url params for canonical and redirect.
+	 * Change com_content forms trigger.
+	 *
+	 * @param   Form   $form  The form to be altered.
+	 * @param   mixed  $data  The associated data for the form.
+	 *
+	 * @throws  Exception
 	 *
 	 * @since  __DEPLOY_VERSION__
 	 */
-	public function onZnatokDoublesProtection()
+	public function onContentPrepareForm($form, $data)
+	{
+		$formName = $form->getName();
+		if ($formName === 'com_config.component' && $this->app->input->get('component') === 'com_content')
+		{
+			Form::addFormPath(__DIR__ . '/forms');
+			$form->loadFile('config');
+			Factory::getDocument()->addStyleDeclaration("#znatok .subform-repeatable {max-width: 300px}");
+		}
+	}
+
+	/**
+	 * Method to get url params for canonical and redirect.
+	 *
+	 * @param   Registry  $params  Znatok Component options.
+	 *
+	 * @return array|false
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	public function onZnatokDoublesProtection($params)
 	{
 		if ($this->app->input->get('option') === 'com_content')
 		{
-			$view = $this->app->input->get('view');
-			$id   = $this->app->input->getInt('id');
-			$link = null;
-
-			JLoader::register('ContentHelperRoute', JPATH_SITE . '/components/com_content/helpers/route.php');
-			if ($view === 'categories')
-			{
-				// Content Categories
-				$link = 'index.php?option=com_content&view=categories&id=' . $id;
-			}
-			elseif ($view === 'category')
-			{
-				// Category
-				$link  = ContentHelperRoute::getCategoryRoute($id);
-				$limit = $this->getContentCategoryLimit();
-				if ($offset = $this->app->input->getInt('start'))
-				{
-					$link .= '&start=' . floor($offset / $limit) * $limit;
-				}
-			}
-			elseif ($view == 'article')
-			{
-				// Content Article
-				$link = ContentHelperRoute::getArticleRoute($id, $this->app->input->getInt('catid'));
-			}
-
-			if ($link) return array(
-				'link'              => $link,
+			$view   = $this->app->input->get('view');
+			$id     = $this->app->input->getInt('id');
+			$result = array(
+				'link'              => false,
+				'canonical'         => null,
+				'redirect'          => null,
 				'use_route'         => true,
 				'canonical_allowed' => array(),
 				'redirect_allowed'  => array()
 			);
+
+			$contentParams = ComponentHelper::getParams('com_content');
+			JLoader::register('ContentHelperRoute', JPATH_SITE . '/components/com_content/helpers/route.php');
+
+			if ($view === 'categories'
+				&& ($contentParams->get('znatok_categories_doubles_canonical', 1) ||
+					$contentParams->get('znatok_categories_doubles_redirect', 1)))
+			{
+				// Content Categories
+				$link           = 'index.php?option=com_content&view=categories&id=' . $id;
+				$result['link'] = true;
+				if ($contentParams->get('znatok_categories_doubles_canonical', 1))
+				{
+					$result['canonical']         = $link;
+					$result['canonical_allowed'] = ArrayHelper::getColumn(
+						ArrayHelper::fromObject($contentParams->get('znatok_categories_doubles_canonical_allowed',
+							new stdClass())), 'key');
+				}
+				if ($contentParams->get('znatok_categories_doubles_redirect', 1))
+				{
+					$result['redirect']         = $link;
+					$result['redirect_allowed'] = ArrayHelper::getColumn(
+						ArrayHelper::fromObject($contentParams->get('znatok_categories_doubles_redirect_allowed',
+							new stdClass())), 'key');
+				}
+			}
+			elseif ($view === 'category' && ($contentParams->get('znatok_category_doubles_canonical', 1) ||
+					$contentParams->get('znatok_category_doubles_redirect', 1)))
+			{
+				// Category
+				$link      = ContentHelperRoute::getCategoryRoute($id);
+				$startLink = $link;
+				$limit     = $this->getContentCategoryLimit();
+				if ($offset = $this->app->input->getInt('start'))
+				{
+					$startLink .= '&start=' . floor($offset / $limit) * $limit;
+				}
+
+				$result['link'] = true;
+				if ($contentParams->get('znatok_category_doubles_canonical', 1))
+				{
+					$result['canonical'] = ($contentParams->get('znatok_category_doubles_canonical_start', 1))
+						? $startLink : $link;
+
+					$result['canonical_allowed'] = ArrayHelper::getColumn(
+						ArrayHelper::fromObject($contentParams->get('znatok_category_doubles_canonical_allowed',
+							new stdClass())), 'key');
+				}
+
+				if ($contentParams->get('znatok_category_doubles_redirect', 1))
+				{
+					$result['redirect']         = $startLink;
+					$result['redirect_allowed'] = ArrayHelper::getColumn(
+						ArrayHelper::fromObject($contentParams->get('znatok_category_doubles_redirect_allowed',
+							new stdClass())), 'key');
+				}
+			}
+			elseif ($view == 'article' && ($contentParams->get('znatok_article_doubles_canonical', 1) ||
+					$contentParams->get('znatok_article_doubles_redirect', 1)))
+			{
+				// Content Article
+				$link = ContentHelperRoute::getArticleRoute($id, $this->app->input->getInt('catid'));
+
+				$result['link'] = true;
+				if ($contentParams->get('znatok_article_doubles_canonical', 1))
+				{
+					$result['canonical']         = $link;
+					$result['canonical_allowed'] = ArrayHelper::getColumn(
+						ArrayHelper::fromObject($contentParams->get('znatok_article_doubles_canonical_allowed',
+							new stdClass())), 'key');
+				}
+				if ($contentParams->get('znatok_article_doubles_redirect', 1))
+				{
+					$result['redirect']         = $link;
+					$result['redirect_allowed'] = ArrayHelper::getColumn(
+						ArrayHelper::fromObject($contentParams->get('znatok_article_doubles_redirect_allowed',
+							new stdClass())), 'key');
+				}
+			}
+
+			if ($result['link']) return $result;
 		}
 
 		return false;
@@ -211,46 +299,56 @@ class plgZnatokContent extends CMSPlugin
 		if ($data = $this->getPaginationMeta())
 		{
 			if (empty($data['page']) || $data['page'] <= 1) return false;
+			$contentParams = ComponentHelper::getParams('com_content');
 
 			/* @var HtmlDocument $doc */
 			$doc = Factory::getDocument();
 			if ($doc->getType() !== 'html') return false;
 
 			$result = array(
-				'title'       => Text::sprintf('COM_ZNATOK_PAGINATION_TITLE', $doc->getTitle(), $data['page']),
+				'title'       => false,
 				'description' => false,
 			);
 
+			// Set title
+			if ($contentParams->get('znatok_category_pagination_title', 1))
+			{
+				$result['title'] = Text::sprintf('COM_ZNATOK_PAGINATION_TITLE', $doc->getTitle(), $data['page']);
+			}
+
 			// Set description
-			$descriptionStart   = $data['category_title'] . ': ';
-			$descriptionEnd     = ' ...';
-			$descriptionEndShow = false;
-			$descriptionTotal   = iconv_strlen($descriptionStart) + iconv_strlen($descriptionEnd);
-			$descriptionMax     = 250;
-
-			$descriptionMiddle = array();
-			foreach ($data['items_title'] as $title)
+			if ($contentParams->get('znatok_category_pagination_description', 1))
 			{
-				$descriptionTotalNew = $descriptionTotal + iconv_strlen($title) + 2;
-				if ($descriptionTotalNew <= $descriptionMax)
+				$descriptionStart   = $data['category_title'] . ': ';
+				$descriptionEnd     = ' ...';
+				$descriptionEndShow = false;
+				$descriptionTotal   = iconv_strlen($descriptionStart) + iconv_strlen($descriptionEnd);
+				$descriptionMax     = 250;
+
+				$descriptionMiddle = array();
+				foreach ($data['items_title'] as $title)
 				{
-					$descriptionTotal    = $descriptionTotalNew;
-					$descriptionMiddle[] = $title;
+					$descriptionTotalNew = $descriptionTotal + iconv_strlen($title) + 2;
+					if ($descriptionTotalNew <= $descriptionMax)
+					{
+						$descriptionTotal    = $descriptionTotalNew;
+						$descriptionMiddle[] = $title;
+					}
+					else
+					{
+						$descriptionEndShow = true;
+						break;
+					}
 				}
-				else
+
+				$result['description'] = $descriptionStart . implode(', ', $descriptionMiddle);
+				if ($descriptionEndShow)
 				{
-					$descriptionEndShow = true;
-					break;
+					$result['description'] .= $descriptionEnd;
 				}
 			}
 
-			$result['description'] = $descriptionStart . implode(', ', $descriptionMiddle);
-			if ($descriptionEndShow)
-			{
-				$result['description'] .= $descriptionEnd;
-			}
-
-			$doc->addScriptOptions('plg_znatok_pagination_meta', $data);
+			$doc->addScriptOptions('plg_znatok_pagination_meta', array());
 
 			return $result;
 		}

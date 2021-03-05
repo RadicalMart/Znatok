@@ -11,10 +11,11 @@
 
 defined('_JEXEC') or die;
 
-use Joomla\CMS\Application\CMSApplication;;
+use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Document\HtmlDocument;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
@@ -133,6 +134,26 @@ class plgSystemZnatok extends CMSPlugin
 		PluginHelper::importPlugin('znatok');
 	}
 
+
+	/**
+	 * Change com_content forms trigger.
+	 *
+	 * @param   Form   $form  The form to be altered.
+	 * @param   mixed  $data  The associated data for the form.
+	 *
+	 * @throws  Exception
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	public function onContentPrepareForm($form, $data)
+	{
+		$formName = $form->getName();
+		if ($formName === 'com_config.component' && $this->app->input->get('component') === 'com_znatok')
+		{
+			Factory::getDocument()->addStyleDeclaration("#global .subform-repeatable {max-width: 300px}");
+		}
+	}
+
 	/**
 	 * Doubles protection.
 	 *
@@ -155,60 +176,86 @@ class plgSystemZnatok extends CMSPlugin
 	{
 		if ($this->app->isClient('site') && ($this->doubles_canonical || $this->doubles_redirect))
 		{
-			$canonical = null;
-			$redirect = null;
-			$link              = null;
+			$canonical         = null;
+			$redirect          = null;
 			$canonical_allowed = ArrayHelper::getColumn(
 				ArrayHelper::fromObject($this->componentParams->get('doubles_canonical_allowed', new stdClass())),
 				'key');
 			$redirect_allowed  = ArrayHelper::getColumn(
 				ArrayHelper::fromObject($this->componentParams->get('doubles_redirect_allowed', new stdClass())),
 				'key');
-			foreach ($this->app->triggerEvent('onZnatokDoublesProtection') as $result)
+			foreach ($this->app->triggerEvent('onZnatokDoublesProtection', array($this->componentParams)) as $result)
 			{
 				if (empty($result)) continue;
 
-				if (!empty($result['link']))
+				// Set canonical
+				if (!empty($result['canonical']))
 				{
-					$link = (!empty($result['use_route'])) ? Route::_($result['link'], false) : $result['link'];
+					$canonical = (!empty($result['use_route'])) ? Route::_($result['canonical'], false) : $result['canonical'];
 				}
 				if (!empty($result['canonical_allowed']))
 				{
 					$canonical_allowed = array_merge($canonical_allowed, $result['canonical_allowed']);
+				}
+
+				// Set redirect
+				if (!empty($result['redirect']))
+				{
+					$redirect = (!empty($result['use_route'])) ? Route::_($result['redirect'], false) : $result['redirect'];
 				}
 				if (!empty($result['redirect_allowed']))
 				{
 					$redirect_allowed = array_merge($redirect_allowed, $result['redirect_allowed']);
 				}
 			}
-			if ($link)
+
+			// Prepare allowed params
+			$canonical_allowed = array_unique($canonical_allowed);
+			$redirect_allowed  = array_unique($redirect_allowed);
+			if (!empty($canonical_allowed))
 			{
-				$uri       = Uri::getInstance();
-				$canonical = Uri::getInstance($link);
+				$redirect_allowed = array_unique(array_merge($canonical_allowed, $redirect_allowed));
+			}
 
-				// Add allowed variables from params
-				foreach ($canonical_allowed as $name)
+			if ($canonical || $redirect)
+			{
+				$uri = Uri::getInstance();
+				if ($this->doubles_canonical && $canonical)
 				{
-					if ($var = $uri->getVar($name, false)) $canonical->setVar($name, $var);
-				}
+					$canonical = Uri::getInstance($canonical);
 
-				// Check empty canonical variables
-				foreach ($canonical->getQuery(true) as $name => $value)
-				{
-					$value = trim($value);
-					if (empty($value)) $canonical->delVar($name);
-				}
+					// Add allowed variables from params
+					foreach ($canonical_allowed as $name)
+					{
+						if ($var = $uri->getVar($name, false)) $canonical->setVar($name, $var);
+					}
 
-				// Set global canonical variable
-				if ($this->doubles_canonical)
-				{
-					$this->canonical = $uri->toString(array('scheme', 'host', 'port'))
-						. $canonical->toString(array('path', 'query', 'fragment'));
+					// Check empty canonical variables
+					foreach ($canonical->getQuery(true) as $name => $value)
+					{
+						$value = trim($value);
+						if (empty($value)) $canonical->delVar($name);
+					}
+
+					// Set global canonical variable
+					if ($this->doubles_canonical)
+					{
+						$canonical = urldecode($uri->toString(array('scheme', 'host', 'port'))
+							. $canonical->toString(array('path', 'query', 'fragment')));
+						if ($this->app->triggerEvent('onZnatokCanonicalPrepare',
+							array($this->componentParams, &$canonical)))
+						{
+							$canonical = urldecode($canonical);
+						}
+						$this->canonical = $canonical;
+					}
 				}
 
 				// Prepare redirect link
-				if ($this->doubles_redirect)
+				if ($this->doubles_redirect && $redirect)
 				{
+					$redirect = Uri::getInstance($redirect);
+
 					// Add others variable
 					foreach ($uri->getQuery(true) as $name => $value)
 					{
@@ -216,16 +263,22 @@ class plgSystemZnatok extends CMSPlugin
 						if (empty($value)) continue;
 
 						// Add utm variables
-						if (preg_match('#^utm_#', $name)) $canonical->setVar($name, $value);
+						if (preg_match('#^utm_#', $name)) $redirect->setVar($name, $value);
 
 						// Add allowed variables from params
-						if (in_array($name, $redirect_allowed)) $canonical->setVar($name, $value);
+						if (in_array($name, $redirect_allowed)) $redirect->setVar($name, $value);
+					}
+
+					$redirect = urldecode($redirect->toString(array('path', 'query', 'fragment')));
+					if ($this->app->triggerEvent('onZnatokRedirectPrepare',
+						array($this->componentParams, &$redirect)))
+					{
+						$redirect = urldecode($redirect);
 					}
 
 					// Redirect if need
-					$current  = $uri->toString(array('path', 'query', 'fragment'));
-					$redirect = $canonical->toString(array('path', 'query', 'fragment'));
-					if (urldecode($current) != urldecode($redirect)) $this->app->redirect($redirect, 301);
+					$current = urldecode($uri->toString(array('path', 'query', 'fragment')));
+					if ($current != $redirect) $this->app->redirect($redirect, 301);
 				}
 			}
 		}
