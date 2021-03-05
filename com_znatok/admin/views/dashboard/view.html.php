@@ -11,21 +11,11 @@
 
 defined('_JEXEC') or die;
 
-use Joomla\CMS\Language\Text;
+use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\View\HtmlView;
-use Joomla\CMS\Toolbar\ToolbarHelper;
 
 class ZnatokViewDashboard extends HtmlView
 {
-	/**
-	 * View sidebar.
-	 *
-	 * @var  string
-	 *
-	 * @since  __DEPLOY_VERSION__
-	 */
-	public $sidebar;
-
 	/**
 	 * Display the view.
 	 *
@@ -39,39 +29,8 @@ class ZnatokViewDashboard extends HtmlView
 	 */
 	public function display($tpl = null)
 	{
-		// Add title and toolbar
-		$this->addToolbar();
-
-		// Prepare sidebar
-		ZnatokHelper::addSubmenu('dashboard');
-		$this->sidebar = JHtmlSidebar::render();
-
-		// Check for errors
-		if (count($errors = $this->get('Errors')))
-		{
-			throw new Exception(implode('\n', $errors), 500);
-		}
+		Factory::getApplication()->redirect('index.php?option=com_config&view=component&component=com_znatok');
 
 		return parent::display($tpl);
-	}
-
-	/**
-	 * Add title and toolbar.
-	 *
-	 * @since  __DEPLOY_VERSION__
-	 */
-	protected function addToolbar()
-	{
-		$canDo = ZnatokHelper::getActions('com_znatok', 'dashboard');
-
-		// Set page title
-		ToolbarHelper::title(Text::_('COM_ZNATOK') . ': ' . Text::_('COM_ZNATOK_DASHBOARD'), 'lamp');
-
-
-		// Add preferences button
-		if ($canDo->get('core.admin') || $canDo->get('core.options'))
-		{
-			ToolbarHelper::preferences('com_znatok');
-		}
 	}
 }

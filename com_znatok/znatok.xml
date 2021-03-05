@@ -9,21 +9,6 @@
 	<authorUrl>https://delo-design.ru</authorUrl>
 	<version>0.0.1-dev</version>
 	<description>COM_ZNATOK_DESCRIPTION</description>
-	<scriptfile>script.php</scriptfile>
-<!--	<install>-->
-<!--		<sql>-->
-<!--			<file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>-->
-<!--		</sql>-->
-<!--	</install>-->
-<!--	<uninstall>-->
-<!--		<sql>-->
-<!--			<file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>-->
-<!--		</sql>-->
-<!--	</uninstall>-->
-	<files folder="site">
-		<filename>controller.php</filename>
-		<filename>znatok.php</filename>
-	</files>
 	<languages folder="site">
 		<language tag="en-GB">language/en-GB/en-GB.com_znatok.ini</language>
 		<language tag="en-GB">language/en-GB/en-GB.com_znatok.sys.ini</language>
@@ -34,14 +19,9 @@
 		<menu>COM_ZNATOK</menu>
 		<submenu>
 			<menu option="com_znatok" view="dashboard">COM_ZNATOK_DASHBOARD</menu>
-<!--			<menu option="com_znatok" view="urls">COM_ZNATOK_URLS</menu>-->
 		</submenu>
 		<files folder="admin">
-			<folder>controllers</folder>
 			<folder>helpers</folder>
-			<folder>models</folder>
-			<folder>sql</folder>
-			<folder>tables</folder>
 			<folder>views</folder>
 			<filename>access.xml</filename>
 			<filename>config.xml</filename>
@@ -55,9 +35,4 @@
 			<language tag="ru-RU">language/ru-RU/ru-RU.com_znatok.sys.ini</language>
 		</languages>
 	</administration>
-	<media destination="com_znatok" folder="media">
-		<folder>css</folder>
-		<folder>js</folder>
-		<folder>images</folder>
-	</media>
 </extension>
