@@ -19,6 +19,8 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 
@@ -69,6 +71,11 @@ class plgZnatokContent extends CMSPlugin
 			Form::addFormPath(__DIR__ . '/forms');
 			$form->loadFile('config');
 			Factory::getDocument()->addStyleDeclaration("#znatok .subform-repeatable {max-width: 300px}");
+		}
+		elseif ($formName === 'com_categories.categorycom_content')
+		{
+			Form::addFormPath(__DIR__ . '/forms');
+			$form->loadFile('category');
 		}
 	}
 
@@ -125,6 +132,8 @@ class plgZnatokContent extends CMSPlugin
 					$contentParams->get('znatok_category_doubles_redirect', 1)))
 			{
 				// Category
+				$this->checkCategoryResponse($id);
+
 				$link      = ContentHelperRoute::getCategoryRoute($id);
 				$startLink = $link;
 				$limit     = $this->getContentCategoryLimit();
@@ -179,6 +188,39 @@ class plgZnatokContent extends CMSPlugin
 		}
 
 		return false;
+	}
+
+	/**
+	 * Method to check category page response.
+	 *
+	 * @param   int  $pk  Category id.
+	 *
+	 * @throws Exception
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected function checkCategoryResponse($pk = null)
+	{
+		$pk = (int) $pk;
+		if ($pk <= 1) return;
+
+		$db    = $this->db;
+		$query = $db->getQuery(true)
+			->select('params')
+			->from($db->quoteName('#__categories'))
+			->where('id = ' . $pk);
+		if (!$params = $db->setQuery($query, 0, 1)->loadResult()) return;
+		$params = new Registry($params);
+
+		if (!$code = (int) $params->get('page_response')) return;
+
+		if ($code === 200) return;
+
+		if ($code === 404) throw new Exception(Text::_('PLG_ZNATOK_CONTENT_ERROR_CATEGORY_NOT_FOUND'), 404);
+
+		$redirect = $params->get('page_redirect', Uri::root());
+		if (strpos($redirect, 'index.php') !== false) $redirect = Route::_($redirect);
+		if ($code === 301 || $code === 302) $this->app->redirect($redirect, $code);
 	}
 
 	/**

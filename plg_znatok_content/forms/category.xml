@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset name="jmetadata" label="JGLOBAL_FIELDSET_METADATA_OPTIONS">
+		<fields name="params">
+			<field name="page_response" type="list"
+				   label="PLG_ZNATOK_CONTENT_CATEGORY_PAGE_RESPONSE"
+				   default="200">
+				<option value="200">PLG_ZNATOK_CONTENT_CATEGORY_PAGE_RESPONSE_200</option>
+				<option value="404">PLG_ZNATOK_CONTENT_CATEGORY_PAGE_RESPONSE_404</option>
+				<option value="301">PLG_ZNATOK_CONTENT_CATEGORY_PAGE_RESPONSE_301</option>
+				<option value="302">PLG_ZNATOK_CONTENT_CATEGORY_PAGE_RESPONSE_302</option>
+			</field>
+			<field name="page_redirect" type="text"
+				   label="PLG_ZNATOK_CONTENT_CATEGORY_PAGE_REDIRECT"
+				   default=""
+				   class="input-xxlarge"
+				   showon="page_response:301[OR]page_response:302"/>
+		</fields>
+	</fieldset>
+</form>

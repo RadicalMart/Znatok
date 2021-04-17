@@ -18,12 +18,7 @@
 	</languages>
 	<files>
 		<folder>forms</folder>
+		<folder>template</folder>
 		<filename plugin="content">content.php</filename>
 	</files>
-	<config>
-		<fields name="params">
-			<fieldset name="basic">
-			</fieldset>
-		</fields>
-	</config>
 </extension>

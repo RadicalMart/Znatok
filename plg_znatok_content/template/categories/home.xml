@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="PLG_ZNATOK_CONTENT_CATEGORIES_VIEW_HOME" option="PLG_ZNATOK_CONTENT_CATEGORIES_VIEW_HOME_OPTION">
+		<message>
+			<![CDATA[PLG_ZNATOK_CONTENT_VIEW_CATEGORIES_HOME_DESCRIPTION]]>
+		</message>
+	</layout>
+	<fields name="request">
+		<fieldset name="request" addfieldpath="/administrator/components/com_categories/models/fields">
+			<field name="id" type="hidden" default="0"/>
+		</fieldset>
+	</fields>
+	<fields name="params">
+		<fieldset name="basic" label="COM_MENUS_BASIC_FIELDSET_LABEL">
+			<field name="maxLevelcat" type="hidden" default="0"/>
+			<field name="maxLevel" type="hidden" default="0"/>
+		</fieldset>
+	</fields>
+</metadata>
