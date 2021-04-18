@@ -92,8 +92,10 @@ class plgZnatokContent extends CMSPlugin
 	{
 		if ($this->app->input->get('option') === 'com_content')
 		{
-			$view   = $this->app->input->get('view');
-			$id     = $this->app->input->getInt('id');
+			$view     = $this->app->input->get('view');
+			$id       = $this->app->input->getInt('id');
+			$language = $this->app->input->getCmd('lang');
+
 			$result = array(
 				'link'              => false,
 				'canonical'         => null,
@@ -111,7 +113,8 @@ class plgZnatokContent extends CMSPlugin
 					$contentParams->get('znatok_categories_doubles_redirect', 1)))
 			{
 				// Content Categories
-				$link           = 'index.php?option=com_content&view=categories&id=' . $id;
+				$link = 'index.php?option=com_content&view=categories&id=' . $id;
+				if (!empty($language) && $language !== '*') $link .= '&lang=' . $language;
 				$result['link'] = true;
 				if ($contentParams->get('znatok_categories_doubles_canonical', 1))
 				{
@@ -134,7 +137,7 @@ class plgZnatokContent extends CMSPlugin
 				// Category
 				$this->checkCategoryResponse($id);
 
-				$link      = ContentHelperRoute::getCategoryRoute($id);
+				$link      = ContentHelperRoute::getCategoryRoute($id, $language);
 				$startLink = $link;
 				$limit     = $this->getContentCategoryLimit();
 				if ($offset = $this->app->input->getInt('start'))
@@ -165,7 +168,7 @@ class plgZnatokContent extends CMSPlugin
 					$contentParams->get('znatok_article_doubles_redirect', 1)))
 			{
 				// Content Article
-				$link = ContentHelperRoute::getArticleRoute($id, $this->app->input->getInt('catid'));
+				$link = ContentHelperRoute::getArticleRoute($id, $this->app->input->getInt('catid'), $language);
 
 				$result['link'] = true;
 				if ($contentParams->get('znatok_article_doubles_canonical', 1))
