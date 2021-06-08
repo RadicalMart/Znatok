@@ -269,15 +269,17 @@ class plgSystemZnatok extends CMSPlugin
 						if (in_array($name, $redirect_allowed)) $redirect->setVar($name, $value);
 					}
 
-					$redirect = urldecode($redirect->toString(array('path', 'query', 'fragment')));
-					if ($this->app->triggerEvent('onZnatokRedirectPrepare',
-						array($this->componentParams, &$redirect)))
-					{
-						$redirect = urldecode($redirect);
-					}
-
 					// Redirect if need
 					$current = urldecode($uri->toString(array('path', 'query', 'fragment')));
+					$redirect = urldecode($redirect->toString(array('path', 'query', 'fragment')));
+
+					if ($this->app->triggerEvent('onZnatokRedirectPrepare',
+						array($this->componentParams, &$redirect, &$current)))
+					{
+						$redirect = urldecode($redirect);
+						$current  = urldecode($current);
+					}
+
 					if ($current != $redirect) $this->app->redirect($redirect, 301);
 				}
 			}
