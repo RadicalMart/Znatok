@@ -17,9 +17,6 @@
 	</languages>
 	<administration>
 		<menu>COM_ZNATOK</menu>
-		<submenu>
-			<menu option="com_znatok" view="dashboard">COM_ZNATOK_DASHBOARD</menu>
-		</submenu>
 		<files folder="admin">
 			<folder>helpers</folder>
 			<folder>views</folder>
