@@ -21,6 +21,6 @@
 		<folder type="plugin" group="znatok" id="content">plg_znatok_content</folder>
 	</files>
 	<server type="extension" priority="1" name="Znatok">
-		https://hika.su/update/free/pkg_znatok.xml
+		https://radicalmart.ru/update?element=pkg_znatok
 	</server>
 </extension>
