@@ -2,7 +2,7 @@
 /*
  * @package     Znatok Package
  * @subpackage  plg_znatok_content
- * @version     __DEPLOY_VERSION__
+ * @version     1.0.0
  * @author      Delo Design - delo-design.ru
  * @copyright   Copyright (c) 2021 Delo Design. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -31,7 +31,7 @@ class plgZnatokContent extends CMSPlugin
 	 *
 	 * @var  CMSApplication
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected $app = null;
 
@@ -40,7 +40,7 @@ class plgZnatokContent extends CMSPlugin
 	 *
 	 * @var  JDatabaseDriver
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected $db = null;
 
@@ -49,7 +49,7 @@ class plgZnatokContent extends CMSPlugin
 	 *
 	 * @var  boolean
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected $autoloadLanguage = true;
 
@@ -61,7 +61,7 @@ class plgZnatokContent extends CMSPlugin
 	 *
 	 * @throws  Exception
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	public function onContentPrepareForm($form, $data)
 	{
@@ -86,7 +86,7 @@ class plgZnatokContent extends CMSPlugin
 	 *
 	 * @return array|false
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	public function onZnatokDoublesProtection($params)
 	{
@@ -200,7 +200,7 @@ class plgZnatokContent extends CMSPlugin
 	 *
 	 * @throws Exception
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected function checkCategoryResponse($pk = null)
 	{
@@ -231,7 +231,7 @@ class plgZnatokContent extends CMSPlugin
 	 *
 	 * @return int content category page items limit.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected function getContentCategoryLimit()
 	{
@@ -261,7 +261,7 @@ class plgZnatokContent extends CMSPlugin
 	 * @param   mixed    &$params   The view params.
 	 * @param   integer   $page     The 'page' number.
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   1.0.0
 	 */
 	public function onContentPrepare($context, &$row, &$params, $page = 0)
 	{
@@ -305,7 +305,7 @@ class plgZnatokContent extends CMSPlugin
 	 *
 	 * @return array|false Data array on success, False on failure.
 	 *
-	 * @since __DEPLOY_VERSION__
+	 * @since 1.0.0
 	 */
 	protected function getPaginationMeta()
 	{
@@ -332,7 +332,7 @@ class plgZnatokContent extends CMSPlugin
 	 *
 	 * @return array|false Data array on success, False on failure.
 	 *
-	 * @since __DEPLOY_VERSION__
+	 * @since 1.0.0
 	 */
 	public function onZnatokPaginationMeta()
 	{

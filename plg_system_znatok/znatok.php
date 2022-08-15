@@ -2,7 +2,7 @@
 /*
  * @package     Znatok Package
  * @subpackage  plg_system_znatok
- * @version     __DEPLOY_VERSION__
+ * @version     1.0.0
  * @author      Delo Design - delo-design.ru
  * @copyright   Copyright (c) 2021 Delo Design. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -30,7 +30,7 @@ class plgSystemZnatok extends CMSPlugin
 	 *
 	 * @var  CMSApplication
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected $app = null;
 
@@ -39,7 +39,7 @@ class plgSystemZnatok extends CMSPlugin
 	 *
 	 * @var  JDatabaseDriver
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected $db = null;
 
@@ -48,7 +48,7 @@ class plgSystemZnatok extends CMSPlugin
 	 *
 	 * @var  boolean
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected $autoloadLanguage = true;
 
@@ -57,7 +57,7 @@ class plgSystemZnatok extends CMSPlugin
 	 *
 	 * @var  Registry
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected $componentParams = null;
 
@@ -66,7 +66,7 @@ class plgSystemZnatok extends CMSPlugin
 	 *
 	 * @var  boolean
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected $doubles_canonical = false;
 
@@ -75,7 +75,7 @@ class plgSystemZnatok extends CMSPlugin
 	 *
 	 * @var  boolean
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected $doubles_redirect = false;
 
@@ -84,7 +84,7 @@ class plgSystemZnatok extends CMSPlugin
 	 *
 	 * @var  boolean
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected $pagination_title = false;
 
@@ -93,7 +93,7 @@ class plgSystemZnatok extends CMSPlugin
 	 *
 	 * @var  boolean
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected $pagination_description = false;
 
@@ -102,7 +102,7 @@ class plgSystemZnatok extends CMSPlugin
 	 *
 	 * @var  string
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected $canonical = null;
 
@@ -112,7 +112,7 @@ class plgSystemZnatok extends CMSPlugin
 	 * @param   object  &$subject  The object to observe
 	 * @param   array    $config   An optional associative array of configuration settings.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	public function __construct(&$subject, $config = array())
 	{
@@ -143,7 +143,7 @@ class plgSystemZnatok extends CMSPlugin
 	 *
 	 * @throws  Exception
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	public function onContentPrepareForm($form, $data)
 	{
@@ -159,7 +159,7 @@ class plgSystemZnatok extends CMSPlugin
 	 *
 	 * @throws  Exception
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	public function onAfterRoute()
 	{
@@ -170,7 +170,7 @@ class plgSystemZnatok extends CMSPlugin
 	/**
 	 * Method to check page url, and redirect if link is not correct.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected function fixDoubles()
 	{
@@ -293,7 +293,7 @@ class plgSystemZnatok extends CMSPlugin
 	/**
 	 * Set canonical and pagination meta.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	public function onBeforeCompileHead()
 	{
@@ -304,7 +304,7 @@ class plgSystemZnatok extends CMSPlugin
 	/**
 	 * Method to set correct canonical link to page.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected function setCanonical()
 	{
@@ -326,7 +326,7 @@ class plgSystemZnatok extends CMSPlugin
 	/**
 	 * Method to set pagination meta.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected function setPaginationMeta()
 	{

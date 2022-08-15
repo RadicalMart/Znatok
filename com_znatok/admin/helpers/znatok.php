@@ -2,7 +2,7 @@
 /*
  * @package     Znatok Package
  * @subpackage  com_znatok
- * @version     __DEPLOY_VERSION__
+ * @version     1.0.0
  * @author      Delo Design - delo-design.ru
  * @copyright   Copyright (c) 2021 Delo Design. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -21,7 +21,7 @@ class ZnatokHelper extends ContentHelper
 	 *
 	 * @param   string  $vName  The name of the active view.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	public static function addSubmenu($vName)
 	{

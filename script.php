@@ -2,7 +2,7 @@
 /*
  * @package     Znatok Package
  * @subpackage  pkg_znatok
- * @version     __DEPLOY_VERSION__
+ * @version     1.0.0
  * @author      Delo Design - delo-design.ru
  * @copyright   Copyright (c) 2021 Delo Design. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -24,7 +24,7 @@ class pkg_znatokInstallerScript
 	 *
 	 * @var  string
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected $minimumPhp = '7.0';
 
@@ -33,7 +33,7 @@ class pkg_znatokInstallerScript
 	 *
 	 * @var  string
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected $minimumJoomla = '3.9.0';
 
@@ -42,7 +42,7 @@ class pkg_znatokInstallerScript
 	 *
 	 * @var  string
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected $minimumMySQL = '5.7';
 
@@ -51,7 +51,7 @@ class pkg_znatokInstallerScript
 	 *
 	 * @var  string
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected $minimumMariaDb = '10.2.3';
 
@@ -65,7 +65,7 @@ class pkg_znatokInstallerScript
 	 *
 	 * @return  boolean True on success, false on failure.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	function preflight($type, $parent)
 	{
@@ -88,7 +88,7 @@ class pkg_znatokInstallerScript
 	 *
 	 * @return  boolean True on success, false on failure.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected function checkCompatible()
 	{

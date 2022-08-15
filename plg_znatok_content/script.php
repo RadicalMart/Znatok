@@ -2,7 +2,7 @@
 /*
  * @package     Znatok Package
  * @subpackage  plg_znatok_content
- * @version     __DEPLOY_VERSION__
+ * @version     1.0.0
  * @author      Delo Design - delo-design.ru
  * @copyright   Copyright (c) 2021 Delo Design. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -27,7 +27,7 @@ class PlgZnatokContentInstallerScript
 	 *
 	 * @var  array
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected $externalFiles = array(
 		array(
@@ -47,7 +47,7 @@ class PlgZnatokContentInstallerScript
 	 *
 	 * @return  boolean True on success, false on failure.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	function postflight($type, $parent)
 	{
@@ -65,7 +65,7 @@ class PlgZnatokContentInstallerScript
 	 *
 	 * @param   InstallerAdapter  $parent  Parent object calling object.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected function enablePlugin($parent)
 	{
@@ -87,7 +87,7 @@ class PlgZnatokContentInstallerScript
 	 *
 	 * @return  bool True on success, False on failure.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	public function copyExternalFiles($installer)
 	{
@@ -118,7 +118,7 @@ class PlgZnatokContentInstallerScript
 	 *
 	 * @param   InstallerAdapter  $parent  Parent object calling object.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	public function uninstall($parent)
 	{
@@ -129,7 +129,7 @@ class PlgZnatokContentInstallerScript
 	/**
 	 * Method to remove external files.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.0.0
 	 */
 	protected function removeExternalFiles()
 	{
