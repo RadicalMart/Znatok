@@ -38,24 +38,6 @@ class pkg_znatokInstallerScript
 	protected $minimumJoomla = '3.9.0';
 
 	/**
-	 * Minimum MySQL version required to install the extension.
-	 *
-	 * @var  string
-	 *
-	 * @since  1.0.0
-	 */
-	protected $minimumMySQL = '5.7';
-
-	/**
-	 * Minimum MariaDb version required to install the extension.
-	 *
-	 * @var  string
-	 *
-	 * @since  1.0.0
-	 */
-	protected $minimumMariaDb = '10.2.3';
-
-	/**
 	 * Runs right before any installation action.
 	 *
 	 * @param   string                           $type    Type of PostFlight action.
@@ -117,30 +99,6 @@ class pkg_znatokInstallerScript
 		{
 			$app->enqueueMessage(Text::sprintf('PKG_ZNATOK_ERROR_COMPATIBLE_JOOMLA', $this->minimumJoomla),
 				'error');
-
-			return false;
-		}
-
-		// Check database version
-		$db            = Factory::getDbo();
-		$serverType    = $db->getServerType();
-		$serverVersion = $db->getVersion();
-		if ($serverType == 'mysql' && stripos($serverVersion, 'mariadb') !== false)
-		{
-			$serverVersion = preg_replace('/^5\.5\.5-/', '', $serverVersion);
-
-			if (!(version_compare($serverVersion, $this->minimumMariaDb) >= 0))
-			{
-				$app->enqueueMessage(Text::sprintf('PKG_ZNATOK_ERROR_COMPATIBLE_DATABASE',
-					$this->minimumMySQL, $this->minimumMariaDb), 'error');
-
-				return false;
-			}
-		}
-		elseif ($serverType == 'mysql' && !(version_compare($serverVersion, $this->minimumMySQL) >= 0))
-		{
-			$app->enqueueMessage(Text::sprintf('PKG_ZNATOK_ERROR_COMPATIBLE_DATABASE',
-				$this->minimumMySQL, $this->minimumMariaDb), 'error');
 
 			return false;
 		}
