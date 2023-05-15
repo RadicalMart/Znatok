@@ -2,9 +2,9 @@
 /*
  * @package     Znatok Package
  * @subpackage  plg_system_znatok
- * @version     __DEPLOY_VERSION__
+ * @version     1.0.2
  * @author      Delo Design - delo-design.ru
- * @copyright   Copyright (c) 2021 Delo Design. All rights reserved.
+ * @copyright   Copyright (c) 2023 Delo Design. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
  * @link        https://delo-design.ru/
  */
