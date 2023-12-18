@@ -263,10 +263,16 @@ class plgSystemZnatok extends CMSPlugin
 						if (empty($value)) continue;
 
 						// Add utm variables
-						if (preg_match('#^utm_#i', $name)) $redirect->setVar($name, $value);
+						if (preg_match('#^utm_#i', $name)) {
+                            $redirect->setVar($name, $value);
+                            continue;
+                        }
 
 						// Add Yandex.Metrika debug
-						if ($name === '_ym_debug') $redirect->setVar($name, $value);
+						if ($name === '_ym_debug') {
+                            $redirect->setVar($name, $value);
+                            continue;
+                        }
 
 						// Add allowed variables from params
 						if (in_array($name, $redirect_allowed)) $redirect->setVar($name, $value);
