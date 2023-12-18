@@ -262,6 +262,12 @@ class plgSystemZnatok extends CMSPlugin
 						$value = trim($value);
 						if (empty($value)) continue;
 
+                        // Add default Joomla vars
+                        if(in_array($name, array('tmpl', 'format'))) {
+                            $redirect->setVar($name, $value);
+                            continue;
+                        }
+
 						// Add utm variables
 						if (strpos(strtolower($name), 'utm_') === 0) {
                             $redirect->setVar($name, $value);
