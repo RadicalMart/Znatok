@@ -263,7 +263,7 @@ class plgSystemZnatok extends CMSPlugin
 						if (empty($value)) continue;
 
 						// Add utm variables
-						if (preg_match('#^utm_#i', $name)) {
+						if (strpos(strtolower($name), 'utm_') === 0) {
                             $redirect->setVar($name, $value);
                             continue;
                         }
