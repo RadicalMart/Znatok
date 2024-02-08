@@ -262,12 +262,23 @@ class plgSystemZnatok extends CMSPlugin
 						$value = trim($value);
 						if (empty($value)) continue;
 
+                        // Add default Joomla vars
+                        if(in_array($name, array('tmpl', 'format'))) {
+                            $redirect->setVar($name, $value);
+                            continue;
+                        }
+
 						// Add utm variables
-						if (preg_match('#^utm_#', $name)) $redirect->setVar($name, $value);
-						if (preg_match('#^UTM_#', $name)) $redirect->setVar($name, $value);
+						if (strpos(strtolower($name), 'utm_') === 0) {
+                            $redirect->setVar($name, $value);
+                            continue;
+                        }
 
 						// Add Yandex.Metrika debug
-						if ($name === '_ym_debug' && $value == 1) $redirect->setVar($name, $value);
+						if ($name === '_ym_debug') {
+                            $redirect->setVar($name, $value);
+                            continue;
+                        }
 
 						// Add allowed variables from params
 						if (in_array($name, $redirect_allowed)) $redirect->setVar($name, $value);
